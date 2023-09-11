@@ -32,7 +32,7 @@ function getTokenCount(messages: any[]) {
 }
 
 export default async function handler(req: any) {
-  const { messages, chunkCount, maxTokens, temperature, system, pw } =
+  const { messages, chunkCount, maxTokens, temperature, system, pw, session } =
     await req.json();
 
   const demoPw = process.env.DEMO_PW;
@@ -55,6 +55,14 @@ export default async function handler(req: any) {
     //   Question: ${last.content}
     //   Answer:
     // `;
+
+    await fetch(`http://localhost:8080/sessions/${session}/memory`, {
+      method: 'POST',
+      body: JSON.stringify({ messages: [last] }),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    } as any)
 
     const messagesWSystem = [
       {
