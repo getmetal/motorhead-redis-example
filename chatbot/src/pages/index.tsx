@@ -4,6 +4,7 @@ import { useChat } from 'ai/react'
 import ReactMarkdown from 'react-markdown'
 import Image from 'next/image'
 import { CogIcon, InformationCircleIcon, NewspaperIcon, LightBulbIcon, UserIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/router'
 
 import ConfigModal from '@/components/ConfigModal'
 import Error from '@/components/Error';
@@ -16,6 +17,8 @@ import { DEFAULT_PROMPT } from '@/helpers/prompts';
 
 const Chat = () => {
   const messagesEndRef = useRef(null);
+  const router = useRouter();
+  const { session } = router.query;
 
   const [showPwModal, setShowPwModal] = useState(false);
   const [pw, setPw] = useState('');
