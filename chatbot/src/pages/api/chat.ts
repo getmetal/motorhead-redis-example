@@ -1,6 +1,6 @@
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { Configuration, OpenAIApi } from "openai-edge";
-import { retrieveContext } from "@/helpers/metal";
+import { retrieveContext } from "@/helpers/motorhead";
 import { DEFAULT_PROMPT } from "@/helpers/prompts";
 import { encode } from "gpt-tokenizer";
 
@@ -44,17 +44,15 @@ export default async function handler(req: any) {
 
   try {
     const last = messages.pop();
-    // const ctx = await retrieveContext(last.content, {
-    //   limit: chunkCount,
-    // });
+    const ctx = await retrieveContext(last.content, session);
 
-    // const responseQ = { ...last };
+    const responseQ = { ...last };
 
-    // responseQ.content = `
-    //   Context: '''${ctx}'''
-    //   Question: ${last.content}
-    //   Answer:
-    // `;
+    responseQ.content = `
+      Context: '''${ctx}'''
+      Question: ${last.content}
+      Answer:
+    `;
 
     await fetch(`http://localhost:8080/sessions/${session}/memory`, {
       method: 'POST',
@@ -70,7 +68,7 @@ export default async function handler(req: any) {
         content: system || DEFAULT_PROMPT,
       },
       ...messages,
-      last,
+      responseQ,
     ];
 
     const openAiBody = {
