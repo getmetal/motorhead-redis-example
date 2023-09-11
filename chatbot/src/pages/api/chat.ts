@@ -44,17 +44,17 @@ export default async function handler(req: any) {
 
   try {
     const last = messages.pop();
-    const ctx = await retrieveContext(last.content, {
-      limit: chunkCount,
-    });
+    // const ctx = await retrieveContext(last.content, {
+    //   limit: chunkCount,
+    // });
 
-    const responseQ = { ...last };
+    // const responseQ = { ...last };
 
-    responseQ.content = `
-      Context: '''${ctx}'''
-      Question: ${last.content}
-      Answer:
-    `;
+    // responseQ.content = `
+    //   Context: '''${ctx}'''
+    //   Question: ${last.content}
+    //   Answer:
+    // `;
 
     const messagesWSystem = [
       {
@@ -62,7 +62,7 @@ export default async function handler(req: any) {
         content: system || DEFAULT_PROMPT,
       },
       ...messages,
-      responseQ,
+      last,
     ];
 
     const openAiBody = {
